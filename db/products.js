@@ -1,31 +1,89 @@
-let productData = []; 
+let productData = [];
 let productId = 1;
 //{ id: Number, name: String, price: Number, inventory: Number }
 
 
-function get(){
-  console.log(produceData);
+function get() {
+  console.log(productData);
   return productData;
 }
 
-function insert(req){
-  productId++
+function insert(req) {
+  
+  if(isValid(req)){
+ productId++
   let newProduct = {
-    id:productId,
+    id: productId,
     name: req.name,
-    price:parseInt(req.price),
-    inventory:parseInt(req.inventory)
+    price: parseInt(req.price),
+    inventory: parseInt(req.inventory)
   }
 
   productData.push(newProduct);
-console.log(newProduct);
+  console.log(productData);
+  }else{
+    console.log('res.redirect?')
+  }
+}
+
+function isValid(data) {
+  let checkPrice = parseFloat(data.price);
+  let checkInventory = parseFloat(data.inventory);
+  let checkName = parseFloat(data.name);
+  if (!isNaN(checkPrice) && !isNaN(checkInventory) && isNaN(checkName)) {
+    console.log('valid')
+    return true
+  } else {
+    console.log('invalid')
+    return false
+  }
+}
+
+function findId(data){
+ let ind = productData.findIndex(elem => elem.id === data.id);
+ if(ind > 0){
+   
+ }
 }
 
 
+function editProduct(product, id) {
+
+  id = parseInt(id);
+  productData.filter((element) => {
+    if (element.id === id) {
+      return element;
+    }else{
+      return false;
+    };
+  }).map((element) => {
+    element.inventory = parseFloat(product.inventory);
+    element.name = product.name;
+    element.price = parseFloat(product.price);
+    return element;
+  });
+};
+
+function deleteProduct(product, id){
+
+  console.log('made it to delete function')
+  id = parseInt(id);
+  
+  let ind = productData.findIndex(elem => elem.id === id);
+  console.log(ind);
+  if (ind >= 0) {
+    console.log('sliced')
+    productData.splice(ind,1);
+    console.log(productData);
+  
+  }
+}
 
 
 
 module.exports = {
-  get:get,
-  insert:insert
+  get: get,
+  insert: insert,
+  editProduct:editProduct,
+  deleteProduct:deleteProduct
 }
