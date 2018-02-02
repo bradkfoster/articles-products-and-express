@@ -1,7 +1,20 @@
 let productData = [];
-let productId = 1;
+let productId = 2;
 //{ id: Number, name: String, price: Number, inventory: Number }
-
+let fakeData = {
+  id:1,
+  name: 'coffee',
+  price: 2,
+  inventory:10
+}
+let fakeData2 = {
+  id:2,
+  name: 'tea',
+  price: 3,
+  inventory:15
+}
+productData.push(fakeData)
+productData.push(fakeData2)
 
 function get() {
   console.log(productData);
@@ -21,10 +34,12 @@ function insert(req) {
 
   productData.push(newProduct);
   console.log(productData);
+  return true
   }else{
     console.log('res.redirect?')
   }
 }
+
 
 function isValid(data) {
   let checkPrice = parseFloat(data.price);
@@ -39,11 +54,10 @@ function isValid(data) {
   }
 }
 
-function findId(data){
- let ind = productData.findIndex(elem => elem.id === data.id);
- if(ind > 0){
-   
- }
+function findId(id){
+  id = parseInt(id);
+  let ind = productData.findIndex(elem => elem.id === id);
+  return productData[ind];
 }
 
 
@@ -85,5 +99,6 @@ module.exports = {
   get: get,
   insert: insert,
   editProduct:editProduct,
-  deleteProduct:deleteProduct
+  deleteProduct:deleteProduct,
+  findId:findId
 }

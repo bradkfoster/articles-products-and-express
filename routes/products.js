@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const product = require('../db/products')
+
 const valid = {
   "success": true
 };
@@ -10,37 +11,72 @@ const notValid = {
 
 const app = express();
 
+
 const router = express.Router();
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
 
 
-router.get('/',(req,res)=>{
-console.log('working')
-res.send('geeting')
-//res.render('.productViews/indexpro)
 
-}).post('/',(req,res)=>{
-let body = req.body;
-product.insert(body);
-res.send(valid);
+router.post('/', (req, res) => {
+  let body = req.body;
+
+  if (product.insert(body)) {
+    return res.redirect('/products')
+  } else {
+    return res.redirect('products/new')
+  }
+})
+
+router.get('/new', (req, res) => {
+  return res.render('productViews/newpro')
+})
+
+router.get('/', (req, res) => {
+  res.render('productViews/indexpro', {
+    pro: product.get()
+  });
+
 })
 
 router.put('/:id', function (req, res) {
   let body = req.body;
   let id = req.params.id;
-  console.log(id);
+  console.log(body);
+  console.log('put is working');
   product.editProduct(body, id);
-  console.log(product.get());
-  res.send(valid);
-}).delete('/:id', function (req, res) {
+  res.redirect(`/products/${id}`)
+})
+
+
+router.get('/:id', (req, res) => {
+  let id = req.params.id;
+  console.log(req.params.id);
+  let prodInd = product.findId(id);
+  res.render('productViews/product', prodInd);
+})
+
+
+
+router.get('/:id/edit', (req, res) => {
+  let id = req.params.id;
+  console.log(req.params.id);
+  let prodInd = product.findId(id);
+  res.render('productViews/editpro', prodInd)
+})
+
+router.delete('/:id', function (req, res) {
   let body = req.body;
   let id = req.params.id;
   console.log(id);
-  product.deleteProduct(body,id);
-  res.send(valid);
-
+  product.deleteProduct(body, id);
+  res.redirect('/products')
 });
+
+
+
 
 
 
@@ -88,8 +124,8 @@ module.exports = router;
 
 
 
-  //router.get('/new', (req,res) => {
-  //res.render('./productViews/newPro');
+//router.get('/new', (req,res) => {
+//res.render('./productViews/newPro');
 //});
 
 // router.get('/:id', (req, res) => {
@@ -132,5 +168,3 @@ module.exports = router;
 //     console.log({'success' : false});
 //   }
 // });
-
-
