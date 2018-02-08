@@ -1,13 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const product = require('../db/products')
-
-const valid = {
-  "success": true
-};
-const notValid = {
-  "success": false
-};
+const product = require('../db/products');
+const knex = require('../knex/knex.js')
 
 const app = express();
 
@@ -18,30 +12,41 @@ app.use(bodyParser.urlencoded({
 }));
 
 
+router
 
-
-router.post('/', (req, res) => {
-  let body = req.body;
-
-  if (product.insert(body)) {
-    return res.redirect('/products')
-  } else {
-    return res.redirect('products/new')
-  }
+.post('/', (req, res) => {
+ let body = req.body;
+ let newProd = {
+   name:body.name,
+   price:parseInt(body.price),
+   inventory:parseInt(body.inventory)
+ }
+return knex(`products`).insert(newProd, '*')
+.then((result)=>{
+  res.redirect('/products')
 })
 
-router.get('/new', (req, res) => {
+
+
+
+})
+
+.get('/new', (req, res) => {
   return res.render('productViews/newpro')
 })
 
-router.get('/', (req, res) => {
-  res.render('productViews/indexpro', {
-    pro: product.get()
-  });
+.get('/', (req, res) => {
+  return knex.select('*').from('products')
+  .then((result)=>{
+    res.render('productViews/indexpro', {pro: result})
+  })
 
+.catch((err)=>{
+  res.render('products/new')
+})
 })
 
-router.put('/:id', function (req, res) {
+.put('/:id', function (req, res) {
   let body = req.body;
   let id = req.params.id;
   console.log(body);
@@ -51,7 +56,7 @@ router.put('/:id', function (req, res) {
 })
 
 
-router.get('/:id', (req, res) => {
+.get('/:id', (req, res) => {
   let id = req.params.id;
   console.log(req.params.id);
   let prodInd = product.findId(id);
@@ -60,14 +65,14 @@ router.get('/:id', (req, res) => {
 
 
 
-router.get('/:id/edit', (req, res) => {
+.get('/:id/edit', (req, res) => {
   let id = req.params.id;
   console.log(req.params.id);
   let prodInd = product.findId(id);
   res.render('productViews/editpro', prodInd)
 })
 
-router.delete('/:id', function (req, res) {
+.delete('/:id', function (req, res) {
   
  
   let body = req.body;
