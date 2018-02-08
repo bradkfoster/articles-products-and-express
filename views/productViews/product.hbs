@@ -2,7 +2,7 @@
     <h1>{{name}}</h1>
     <h2>{{price}}</h2>
     <h3>{{inventory}}</h3>
-    <form action="/products/{{id}}" method="DELETE" ></form>
+    <form action="/products/{{id}}?_method=DELETE" method="POST" >
      <button type="submit">Delete</button>
      </form>
   </div>

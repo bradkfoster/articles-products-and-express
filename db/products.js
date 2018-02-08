@@ -89,7 +89,9 @@ function deleteProduct(product, id){
     console.log('sliced')
     productData.splice(ind,1);
     console.log(productData);
-  
+    return true
+  }else{
+    return false;
   }
 }
 
