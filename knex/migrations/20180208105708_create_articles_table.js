@@ -3,7 +3,6 @@ exports.up = function(knex, Promise) {
     table.string('title').unique().notNullable();
     table.string('body').notNullable();
     table.string('author').notNullable();
-    table.decimal('price').notNullable();
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.timestamp('updated_at').defaultTo(knex.fn.now());
   }) 

@@ -57,6 +57,7 @@ return knex(`products`).insert(newProd, '*')
         res.redirect(`/products/${updateID}`)
       })
       .catch((err)=>{
+        console.log('errr')
         res.redirect(`/products/${updateID}`);
       })
     
